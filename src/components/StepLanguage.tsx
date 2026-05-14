@@ -15,15 +15,28 @@ export function StepLanguage({ onNext, onPrev }: { onNext: () => void, onPrev: (
 
   const handleLangChange = (code: SupportedLanguage) => {
     setAioMeta((prev) => {
-      const customUrl = getCustomArtUrl(code);
+      if (!prev) return prev;
+      const btttrLangMap: Record<string, string> = { 
+        'es-ES': 'es', 
+        'fr-FR': 'fr', 
+        'de-DE': 'de', 
+        'it-IT': 'it', 
+        'pt-BR': 'pt-PT', 
+        'zh-CN': 'zh', 
+        'ar-SA': 'ar', 
+        'hi-IN': 'hi' 
+      };
+      const btttrCode = btttrLangMap[code];
+      const btttrUrl = btttrCode ? `https://btttr.cc/poster-a/imdb/poster-default/{imdb_id}.jpg?lang=${btttrCode}` : `https://btttr.cc/poster-a/imdb/poster-default/{imdb_id}.jpg`;
+
       return {
         ...prev,
         config: {
           ...prev.config,
           language: code,
           posterRatingProvider: 'custom',
-          customPosterUrlPattern: customUrl,
-          customThumbnailUrlPattern: customUrl,
+          customPosterUrlPattern: btttrUrl,
+          customThumbnailUrlPattern: btttrUrl,
         }
       };
     });

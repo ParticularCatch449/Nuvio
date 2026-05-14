@@ -78,7 +78,7 @@
       ],
       "traktSearchEnabled": false
     },
-    "posterRatingProvider": "rpdb",
+    "posterRatingProvider": "custom",
     "usePosterProxy": true,
     "mdblistWatchTracking": true,
     "anilistWatchTracking": true,

@@ -178,10 +178,22 @@ export function StepExport({ onPrev }: { onPrev: () => void }) {
       file.metadata.apiKeysExcluded = false;
       
       // Set rating poster provider to custom and apply language-specific patterns
-      file.config.posterRatingProvider = "custom";
-      const customUrl = getCustomArtUrl(file.config.language || 'en-US');
-      file.config.customPosterUrlPattern = customUrl;
-      file.config.customThumbnailUrlPattern = customUrl;
+      file.config.posterRatingProvider = 'custom';
+      const btttrLangMap: Record<string, string> = { 
+        'es-ES': 'es', 
+        'fr-FR': 'fr', 
+        'de-DE': 'de', 
+        'it-IT': 'it', 
+        'pt-BR': 'pt-PT', 
+        'zh-CN': 'zh', 
+        'ar-SA': 'ar', 
+        'hi-IN': 'hi' 
+      };
+      const btttrCode = btttrLangMap[file.config.language || 'en-US'];
+      const btttrUrl = btttrCode ? `https://btttr.cc/poster-a/imdb/poster-default/{imdb_id}.jpg?lang=${btttrCode}` : `https://btttr.cc/poster-a/imdb/poster-default/{imdb_id}.jpg`;
+
+      file.config.customPosterUrlPattern = btttrUrl;
+      file.config.customThumbnailUrlPattern = btttrUrl;
 
       // Remove completely those that are not in this subset and sort to match nuvio collections order
       const sortMap = new Map();
@@ -280,6 +292,22 @@ export function StepExport({ onPrev }: { onPrev: () => void }) {
     delete base.tmdbApiKey;
     delete base.tmdbAccessToken;
     base.tvdbApiKey = aioMeta.config.apiKeys.tvdb || '';
+
+    // Enforce custom poster service and apply language-specific patterns
+    base.posterService = 'custom';
+    const btttrLangMap: Record<string, string> = { 
+      'es-ES': 'es', 
+      'fr-FR': 'fr', 
+      'de-DE': 'de', 
+      'it-IT': 'it', 
+      'pt-BR': 'pt-PT', 
+      'zh-CN': 'zh', 
+      'ar-SA': 'ar', 
+      'hi-IN': 'hi' 
+    };
+    const btttrCode = btttrLangMap[aioMeta.config.language] || '';
+    const btttrUrl = btttrCode ? `https://btttr.cc/poster-a/imdb/poster-default/{imdb_id}.jpg?lang=${btttrCode}` : `https://btttr.cc/poster-a/imdb/poster-default/{imdb_id}.jpg`;
+    base.customPosterUrlPattern = btttrUrl;
 
     // Automatically disable all catalogues from the aiostreams file
     if (base.addons && Array.isArray(base.addons)) {

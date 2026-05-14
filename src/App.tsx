@@ -15,7 +15,19 @@ function Header() {
 
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const code = e.target.value as SupportedLanguage;
-    const customUrl = getCustomArtUrl(code);
+    const btttrLangMap: Record<string, string> = { 
+      'es-ES': 'es', 
+      'fr-FR': 'fr', 
+      'de-DE': 'de', 
+      'it-IT': 'it', 
+      'pt-BR': 'pt-PT', 
+      'zh-CN': 'zh', 
+      'ar-SA': 'ar', 
+      'hi-IN': 'hi' 
+    };
+    const btttrCode = btttrLangMap[code];
+    const btttrUrl = btttrCode ? `https://btttr.cc/poster-a/imdb/poster-default/{imdb_id}.jpg?lang=${btttrCode}` : `https://btttr.cc/poster-a/imdb/poster-default/{imdb_id}.jpg`;
+
     setAioMeta((prev) => {
       if (!prev) return prev;
       return {
@@ -24,8 +36,8 @@ function Header() {
           ...prev.config,
           language: code,
           posterRatingProvider: 'custom',
-          customPosterUrlPattern: customUrl,
-          customThumbnailUrlPattern: customUrl,
+          customPosterUrlPattern: btttrUrl,
+          customThumbnailUrlPattern: btttrUrl,
         }
       };
     });
