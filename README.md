@@ -12,6 +12,7 @@ You can easily access the live and official version of Nuvio below.
 - **Collection Builder:** Create and manage customized JSON configuration and data files.
 - **Modern UI:** A clean, responsive interface powered by React 19, Tailwind CSS, and Shadcn UI.
 - **Fast Performance:** Lightning-fast builds via Vite.
+- - **Assets:** [Images](https://tvflix.co.uk/Assets/)
 
 ## 🛠️ Tech Stack
 
