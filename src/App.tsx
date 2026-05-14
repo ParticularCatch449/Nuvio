@@ -3,6 +3,7 @@ import { ConfigProvider, useConfig } from './ConfigContext';
 import { Wizard } from './components/Wizard';
 import { Coffee, Globe } from 'lucide-react';
 import { LANGUAGES, SupportedLanguage, translateText } from './data/translations';
+import { getCustomArtUrl } from './lib/utils';
 
 function Header() {
   const { aioMeta, setAioMeta } = useConfig();
@@ -14,6 +15,7 @@ function Header() {
 
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const code = e.target.value as SupportedLanguage;
+    const customUrl = getCustomArtUrl(code);
     setAioMeta((prev) => {
       if (!prev) return prev;
       return {
@@ -21,6 +23,9 @@ function Header() {
         config: {
           ...prev.config,
           language: code,
+          posterRatingProvider: 'custom',
+          customPosterUrlPattern: customUrl,
+          customThumbnailUrlPattern: customUrl,
         }
       };
     });

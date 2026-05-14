@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, ArrowLeft, Globe } from 'lucide-react';
 import { useConfig } from '../ConfigContext';
 import { LANGUAGES, SupportedLanguage, translateText } from '../data/translations';
+import { getCustomArtUrl } from '../lib/utils';
 
 export function StepLanguage({ onNext, onPrev }: { onNext: () => void, onPrev: () => void }) {
   const { aioMeta, setAioMeta } = useConfig();
@@ -14,12 +15,15 @@ export function StepLanguage({ onNext, onPrev }: { onNext: () => void, onPrev: (
 
   const handleLangChange = (code: SupportedLanguage) => {
     setAioMeta((prev) => {
-      if (!prev) return prev;
+      const customUrl = getCustomArtUrl(code);
       return {
         ...prev,
         config: {
           ...prev.config,
           language: code,
+          posterRatingProvider: 'custom',
+          customPosterUrlPattern: customUrl,
+          customThumbnailUrlPattern: customUrl,
         }
       };
     });

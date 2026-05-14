@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Download, ArrowLeft, ArrowRight, RefreshCw, Layers, Server } from 'lucide-react';
 import { useConfig } from '../ConfigContext';
 import { translateText, SupportedLanguage } from '../data/translations';
+import { getCustomArtUrl } from '../lib/utils';
 import baseStreamsWithDebrid from '../data/streams-with-debrid.json';
 import baseStreamsWithoutDebrid from '../data/streams-without-debrid.json';
 
@@ -176,11 +177,11 @@ export function StepExport({ onPrev }: { onPrev: () => void }) {
       if (!file.metadata) file.metadata = {};
       file.metadata.apiKeysExcluded = false;
       
-      // Clear out custom poster / thumbnail URLs if a specific rating provider is selected
-      if (file.config.posterRatingProvider !== 'custom') {
-        file.config.customPosterUrlPattern = "";
-        file.config.customThumbnailUrlPattern = "";
-      }
+      // Set rating poster provider to custom and apply language-specific patterns
+      file.config.posterRatingProvider = "custom";
+      const customUrl = getCustomArtUrl(file.config.language || 'en-US');
+      file.config.customPosterUrlPattern = customUrl;
+      file.config.customThumbnailUrlPattern = customUrl;
 
       // Remove completely those that are not in this subset and sort to match nuvio collections order
       const sortMap = new Map();
