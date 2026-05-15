@@ -294,20 +294,8 @@ export function StepExport({ onPrev }: { onPrev: () => void }) {
     base.tvdbApiKey = aioMeta.config.apiKeys.tvdb || '';
 
     // Enforce custom poster service and apply language-specific patterns
-    base.posterService = 'custom';
-    const btttrLangMap: Record<string, string> = { 
-      'es-ES': 'es', 
-      'fr-FR': 'fr', 
-      'de-DE': 'de', 
-      'it-IT': 'it', 
-      'pt-BR': 'pt-PT', 
-      'zh-CN': 'zh', 
-      'ar-SA': 'ar', 
-      'hi-IN': 'hi' 
-    };
-    const btttrCode = btttrLangMap[aioMeta.config.language] || '';
-    const btttrUrl = btttrCode ? `https://btttr.cc/poster-a/imdb/poster-default/{imdb_id}.jpg?lang=${btttrCode}` : `https://btttr.cc/poster-a/imdb/poster-default/{imdb_id}.jpg`;
-    base.customPosterUrlPattern = btttrUrl;
+    // Revert poster service to rpdb for AIO Streams as it does not support 'custom'
+    base.posterService = 'rpdb';
 
     // Automatically disable all catalogues from the aiostreams file
     if (base.addons && Array.isArray(base.addons)) {
@@ -480,7 +468,38 @@ export function StepExport({ onPrev }: { onPrev: () => void }) {
         });
       }
     }
-    
+
+    if (streamsConfig.httpStreaming.sootio) {
+      base.presets.push({
+        "type": "sootio",
+        "instanceId": "353",
+        "enabled": true,
+        "options": {
+          "name": "Sootio",
+          "timeout": 7500,
+          "resources": ["stream", "catalog"],
+          "httpProviders": [],
+          "mediaTypes": [],
+          "useMultipleInstances": false
+        }
+      });
+    }
+
+    if (streamsConfig.httpStreaming.hdhub) {
+      base.presets.push({
+        "type": "hdhub",
+        "instanceId": "bb4",
+        "enabled": true,
+        "options": {
+          "name": "HdHub",
+          "timeout": 7500,
+          "resources": ["stream"],
+          "mediaTypes": [],
+          "tb_only": false
+        }
+      });
+    }
+
     // Group Sorting Logic setup
     if (base.groups) {
         const fallthroughCond = "(count(resolution(cached(totalStreams), '2160p')) < 5 and count(resolution(cached(totalStreams), '1080p')) < 5 and count(resolution(cached(totalStreams), '720p')) < 5)";
@@ -489,6 +508,8 @@ export function StepExport({ onPrev }: { onPrev: () => void }) {
             if (streamsConfig.debrid.do.enabled) {
                 group1.push("1d0");
             }
+            if (streamsConfig.httpStreaming.sootio) group1.push("353");
+            if (streamsConfig.httpStreaming.hdhub) group1.push("bb4");
             if (streamsConfig.rules.enableAnime) {
                 group1.push("f89"); // AnimeTosho
             }
@@ -519,11 +540,14 @@ export function StepExport({ onPrev }: { onPrev: () => void }) {
             }
         } else {
             // No debrid
-            // "with anime no debrid use the same as no anime"
-            // removing torrentio since it's dead
+            let group1 = ["1c5"];
+            if (streamsConfig.httpStreaming.hdhub) group1.push("bb4");
+            // If somehow sootio is enabled even without debrid
+            if (streamsConfig.httpStreaming.sootio) group1.push("353");
+
             base.groups.groupings = [
               {
-                "addons": ["1c5"], // Comet
+                "addons": group1,
                 "condition": "true"
               },
               {

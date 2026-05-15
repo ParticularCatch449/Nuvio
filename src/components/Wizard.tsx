@@ -36,11 +36,7 @@ export function Wizard() {
 
     if (setupMode === 'streams' || setupMode === 'both') {
       availableSteps.push({ id: 'debrid', title: 'Debrid Providers', component: StepDebrid });
-      
-      const hasDebrid = streamsConfig.debrid.tb.enabled || streamsConfig.debrid.rd.enabled || streamsConfig.debrid.ad.enabled || streamsConfig.debrid.pm.enabled || streamsConfig.debrid.dl.enabled;
-      if (hasDebrid) {
-        availableSteps.push({ id: 'scrapers', title: 'Additional Scrapers', component: StepScrapers });
-      }
+      availableSteps.push({ id: 'scrapers', title: 'Additional Scrapers', component: StepScrapers });
 
       availableSteps.push({ id: 'performance', title: 'Performance', component: StepPerformance });
       availableSteps.push({ id: 'rules', title: 'Stream Rules', component: StepStreamRules });

@@ -68,6 +68,11 @@ export interface StreamsConfig {
     customName: string;
     customDesc: string;
   };
+  httpStreaming: {
+    enabled: boolean;
+    sootio: boolean;
+    hdhub: boolean;
+  };
 }
 
 const defaultStreamsConfig: StreamsConfig = {
@@ -96,6 +101,11 @@ const defaultStreamsConfig: StreamsConfig = {
     style: 'default',
     customName: '',
     customDesc: '',
+  },
+  httpStreaming: {
+    enabled: false,
+    sootio: false,
+    hdhub: false,
   }
 };
 

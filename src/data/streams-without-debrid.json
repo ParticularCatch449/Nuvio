@@ -224,7 +224,7 @@
       }
     ]
   },
-  "posterService": "custom",
+  "posterService": "rpdb",
   "deduplicator": {
     "enabled": true,
     "excludeAddons": [],
