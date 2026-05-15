@@ -166,7 +166,7 @@ export function StepExport({ onPrev }: { onPrev: () => void }) {
 
   const handleDownloadAio = (part: 1 | 2 | 'all') => {
     const enabledCatalogs = getSortedEnabledCatalogs();
-    const processAioExport = (catalogsSubset: any[]) => {
+    const processAioExport = (catalogsSubset: any[], disableSearch = false) => {
       const allowedIds = new Set(catalogsSubset.map(c => c.id));
       const file = cleanAioFile(aioMeta);
 
@@ -221,14 +221,14 @@ export function StepExport({ onPrev }: { onPrev: () => void }) {
       // If gemini API key is provided, enable AI search
       if (file.config.apiKeys && file.config.apiKeys.gemini && file.config.apiKeys.gemini.trim() !== "") {
         file.config.search = file.config.search || {};
-        file.config.search.enabled = true;
-        file.config.search.ai_enabled = true;
+        file.config.search.enabled = !disableSearch;
+        file.config.search.ai_enabled = !disableSearch;
         file.config.search.ai_provider = "gemini";
         file.config.search.ai_model = "gemini-2.5-flash-lite";
         file.config.search.engineEnabled = file.config.search.engineEnabled || {};
-        file.config.search.engineEnabled["gemini.search"] = true;
+        file.config.search.engineEnabled["gemini.search"] = !disableSearch;
         
-        if (file.config.search.searchOrder && !file.config.search.searchOrder.includes("gemini.search")) {
+        if (!disableSearch && file.config.search.searchOrder && !file.config.search.searchOrder.includes("gemini.search")) {
           const insertIdx = file.config.search.searchOrder.indexOf("tvdb.collections.search");
           if (insertIdx !== -1) {
             file.config.search.searchOrder.splice(insertIdx + 1, 0, "gemini.search");
@@ -236,6 +236,10 @@ export function StepExport({ onPrev }: { onPrev: () => void }) {
             file.config.search.searchOrder.push("gemini.search");
           }
         }
+      } else if (disableSearch) {
+        // Even if no gemini key, we should explicitly disable search if requested
+        file.config.search = file.config.search || {};
+        file.config.search.enabled = false;
       }
 
       return file;
@@ -248,7 +252,7 @@ export function StepExport({ onPrev }: { onPrev: () => void }) {
       const exportAio1 = processAioExport(enabledCatalogs.slice(0, 250));
       downloadFile('aio_meta_part1.json', JSON.stringify(exportAio1, null, 2), setDownloadedAio1);
     } else if (part === 2) {
-      const exportAio2 = processAioExport(enabledCatalogs.slice(250));
+      const exportAio2 = processAioExport(enabledCatalogs.slice(250), true);
       downloadFile('aio_meta_part2.json', JSON.stringify(exportAio2, null, 2), setDownloadedAio2);
     }
   };

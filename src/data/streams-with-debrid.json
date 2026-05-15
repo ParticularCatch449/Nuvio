@@ -369,9 +369,7 @@
   "excludedStreamTypes": [],
   "includedStreamTypes": [],
   "requiredStreamTypes": [],
-  "preferredStreamTypes": [
-    "usenet"
-  ],
+  "preferredStreamTypes": [],
   "excludedEncodes": [],
   "includedEncodes": [],
   "requiredEncodes": [],
@@ -446,9 +444,7 @@
   "seederRangeTypes": [
     "uncached"
   ],
-  "ageRangeTypes": [
-    "usenet"
-  ],
+  "ageRangeTypes": [],
   "digitalReleaseFilter": {
     "enabled": false,
     "tolerance": 0,
@@ -580,9 +576,7 @@
   "alwaysPrecache": true,
   "catalogModifications": [],
   "cacheAndPlay": {
-    "streamTypes": [
-      "usenet"
-    ]
+    "streamTypes": []
   },
   "autoRemoveDownloads": true,
   "useRuntimeFromMetadataProviders": false,
