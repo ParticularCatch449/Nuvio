@@ -293,9 +293,6 @@ export function StepExport({ onPrev }: { onPrev: () => void }) {
     delete base.tmdbAccessToken;
     base.tvdbApiKey = aioMeta.config.apiKeys.tvdb || '';
 
-    // Enforce custom poster service and apply language-specific patterns
-    // Revert poster service to rpdb for AIO Streams as it does not support 'custom'
-    base.posterService = 'rpdb';
 
     // Automatically disable all catalogues from the aiostreams file
     if (base.addons && Array.isArray(base.addons)) {
